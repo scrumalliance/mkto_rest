@@ -18,7 +18,18 @@ describe MktoRest do
     @lead1 = MktoRest::Lead.new(@authenticated_client, { name: 'john', email: 'john@acme.com', id: 1} )
   end
 
-
+  context "#authenticated?" do
+    context "before authentication" do
+      it "should be false" do
+        expect(@client.authenticated?) == false
+      end
+    end
+    context "after authentication" do
+      it "should be true" do
+        expect(@authenticated_client.authenticated?) == true
+      end
+    end
+  end
 
   describe "v1 API" do
     context "#authenticated?" do

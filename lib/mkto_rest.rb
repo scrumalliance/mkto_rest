@@ -21,7 +21,7 @@ module MktoRest
     end
 
     def authenticated?
-      return ! @token.empty?
+      return ! @token.nil? && ! @token.empty?
     end
 
     # used for testing only
