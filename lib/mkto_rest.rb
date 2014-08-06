@@ -6,6 +6,7 @@ require "json"
 module MktoRest
   class Client
     attr_reader :host, :client_id, :client_secret, :token, :expires_in, :valid_until, :token_type, :scope, :last_request_id
+
     def initialize(options = {})
       @host = options[:host]
       @client_id = options[:client_id]
@@ -27,7 +28,6 @@ module MktoRest
     def __auth(token)
       @token = token
     end
-
 
     # \options:
     #    open_timeout - http open timeout
@@ -99,11 +99,11 @@ module MktoRest
         action: "updateOnly",
         lookupField: 'email',
         input: [
-          {
-            email: email,
-            }.merge(values)
-          ]
-          }.to_json
+                {
+                  email: email,
+                }.merge(values)
+               ]
+      }.to_json
       post data
     end
 
@@ -113,11 +113,11 @@ module MktoRest
         action: "updateOnly",
         lookupField: 'id',
         input: [
-          {
-            id: id
-            }.merge(values)
-          ]
-          }.to_json
+                {
+                  id: id
+                }.merge(values)
+               ]
+      }.to_json
       post data
     end
 
@@ -133,4 +133,5 @@ module MktoRest
       data
     end
   end
+
 end

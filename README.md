@@ -55,6 +55,7 @@ fetch a lead and update one of its value:
     client.get_leads :email, 'john@bigcorp.com' do |lead|
       lead.update({ 'CustomField' => 'New Value', 'AnotherField' => 'New value' })
     end
+    client.authenticate
 
 updating a lead, using id, email, etc.
 
@@ -65,19 +66,19 @@ updating a lead, using id, email, etc.
     # update using email
     leads.first.update(new_values, :email)
 
-  creating 2 new leads:
+creating 2 new leads:
 
-      new_leads = [
-                    {
-                      email: 'jane@scorp.com',
-                      firstName: 'Jane Doe'
-                    },
-                    {
-                      email: 'joe@scorp.com',
-                      firstName: 'Joe Doe'
-                    }
-                  ]
-      client.create_leads new_leads
+    new_leads = [
+                  {
+                    email: 'jane@scorp.com',
+                    firstName: 'Jane Doe'
+                  },
+                  {
+                    email: 'joe@scorp.com',
+                    firstName: 'Joe Doe'
+                  }
+                ]
+    client.create_leads new_leads
 
 ## Set up
 
@@ -97,7 +98,7 @@ First create the configuration file .mktorest which should contain your client i
 
     ---
     :host: '215-CIJ-720.mktorest.com'
-    :client_id: 'f950fg3e-80g5-42cc-9dc4-5eb054cc0836
+    :client_id: 'f950fg3e-80g5-42cc-9dc4-5eb054cc0836'
     :client_secret: 'dnGn25KLrtgssy6ecurMPnqQx61vykje'
 
 You can then run the example:
