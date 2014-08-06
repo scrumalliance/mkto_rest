@@ -1,4 +1,4 @@
-$:.unshift(File.expand_path('../../lib/', __FILE__))
+# $:.unshift(File.expand_path('../../lib/', __FILE__))
 require_relative '../lib/mkto_rest'
 # or require 'mkto_gem' if you installed the gem
 
@@ -9,11 +9,11 @@ This script looks for the hostname, client id and key in .mktorest.
 Create that file with the following (yaml) format:
   
     ---
-    :hostname: ''
+    :host: ''
     :client_id: ''
     :client_secret: ''
 
-set your hostname, client id and key to the right values.
+set your host name, client id and key to the right values.
 =end
 
 config_path = File.expand_path(File.join(File.dirname(__FILE__),'..', '.mktorest'))
@@ -22,9 +22,9 @@ if File.exists? config_path
   config = YAML::load_file(config_path) 
 else
   print <<-EOF
-"Set your hostname, client id and key in #{config_path} in this format:
+Set your host name, client id and key in #{config_path} in this format:
 
-#{{ hostname: '', client_id: '', client_secret: '' }.to_yaml}
+#{{ host: '', client_id: '', client_secret: '' }.to_yaml}
 
 EOF
   exit 1
@@ -43,9 +43,10 @@ end
 
 
 
-client = MktoRest::Client.new(host: config[:hostname], client_id: config[:client_id], client_secret: config[:client_secret])
+client = MktoRest::Client.new(config)
 
-#client.debug = true #verbose output, helps debugging 
+client.debug = true if $DEBUG   # from: ruby -d ...
+#client.debug = true #verbose output, helps debugging
 
 client.authenticate
 
