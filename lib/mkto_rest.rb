@@ -11,7 +11,8 @@ module MktoRest
       @host = options[:host]
       @client_id = options[:client_id]
       @client_secret = options[:client_secret]
-      @options = {}
+      @options = options.select {|k,v| [:open_timeout,:read_timeout].include?(k) }
+      MktoRest::HttpUtils.debug = true if options[:debug]
     end
 
     #sets / unsets debug mode
