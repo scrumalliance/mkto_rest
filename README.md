@@ -19,19 +19,26 @@ and include it in your app/gem's Gemfile (this works locally only):
 
 ## Prerequisites
 
-Get the follwing from your Marketo admin:
+Get the follwing values related to the **API User** from your Marketo admin:
 * hostname, i.e. \<munchkin_id\>.mktorest.com
 * client id, e.g. '4567e1cdf-0fae-4685-a914-5be45043f2d8'
 * client secret, e.g. '7Gn0tuiHZiDHnzeu9P14uDQcSx9xIPPt'
+
+If you are the admin and need to *create* an **API User**, start in the Marketo Community docs here:
+
+  * [Create an API Only User Role](https://community.marketo.com/MarketoArticle?id=kA050000000LJcHCAW)
+  * [Create an API Only User](https://community.marketo.com/MarketoArticle?id=kA050000000LJcCCAW)
+  * [Create a Custom Service for Use with ReST API](https://community.marketo.com/MarketoArticle?id=kA050000000LJcqCAG)
 
 ## Usage
 
 Create a client and authenticate,
 
-    client = MktoRest::Client.new(
-      '123-abc-123.mktorest.com',
-      '4567e1cdf-0fae-4685-a914-5be45043f2d8'', 
-      '7Gn0tuiHZiDHnzeu9P14uDQcSx9xIPPt')
+    client = MktoRest::Client.new({
+      host: '123-abc-123.mktorest.com',
+      client_id: '4567e1cdf-0fae-4685-a914-5be45043f2d8'',
+      client_secret: '7Gn0tuiHZiDHnzeu9P14uDQcSx9xIPPt',
+    })
 
 If you need verbosity during troubleshooting, set the client to debug mode
 
@@ -77,7 +84,7 @@ An example script is provided in the example directory. First create the configu
 which should contain your client id and key, and hostname, e.g.:
 
     ---
-    :hostname: '215-CIJ-720.mktorest.com'
+    :host: '215-CIJ-720.mktorest.com'
     :client_id: 'f950fg3e-80g5-42cc-9dc4-5eb054cc0836
     :client_secret: 'dnGn25KLrtgssy6ecurMPnqQx61vykje'
 
