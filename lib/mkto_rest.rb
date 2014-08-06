@@ -1,6 +1,6 @@
-require "mkto_rest/version"
-require "mkto_rest/http_utils"
-require "mkto_rest/lead"
+require_relative "mkto_rest/version"
+require_relative "mkto_rest/http_utils"
+require_relative "mkto_rest/lead"
 require "json"
 
 module MktoRest
@@ -19,8 +19,8 @@ module MktoRest
       MktoRest::HttpUtils.debug = bool
     end
 
-    def authenticated? 
-      return ! @token.empty?
+    def authenticated?
+      return ! @token.nil? && ! @token.empty?
     end
 
     # used for testing only
