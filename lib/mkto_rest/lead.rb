@@ -27,7 +27,7 @@ module MktoRest
     end
 
     def to_s
-      @vars.map { |k| "#{k} => #{self.send(k)}" }.join(", ")
+      @vars.map { |k| "#{k.inspect}=>#{self.send(k).inspect}" }.join(", ")
     end
 
   end
