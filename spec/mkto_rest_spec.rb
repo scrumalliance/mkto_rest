@@ -11,11 +11,11 @@ describe MktoRest do
     @hostname = 'dummy.mktorest.com'
     @token = 'token'
 
-    @client = MktoRest::Client.new(host: @hostname, client_id: @client_id, client_secret: @client_key)
-    @authenticated_client = MktoRest::Client.new(host: @hostname,client_id:  @client_id, client_secret: @client_key)
+    @client = MktoRest::Client.new(:host => @hostname, :client_id => @client_id, :client_secret => @client_key)
+    @authenticated_client = MktoRest::Client.new(:host => @hostname, :client_id => @client_id, :client_secret => @client_key)
     @authenticated_client.__auth(@token)
 
-    @lead1 = MktoRest::Lead.new(@authenticated_client, { name: 'john', email: 'john@acme.com', id: 1} )
+    @lead1 = MktoRest::Lead.new(@authenticated_client, { :name => 'john', :email => 'john@acme.com', :id => 1} )
   end
 
   context "#authenticated?" do
@@ -73,13 +73,13 @@ describe MktoRest do
         expect { @client.get_leads :email, 'john@acme.com' }.to raise_error
       end
       it "should return leads when no block is passed" do
-        l = MktoRest::Lead.new(@authenticated_client, { id: 1, email: 'joe@acme.com'})
+        l = MktoRest::Lead.new(@authenticated_client, { :id => 1, :email => 'joe@acme.com'})
         set_get_leads_stub_request('email', l.email, @hostname, @token)
         leads = @authenticated_client.get_leads :email, l.email
         expect(leads.size) == 1
       end
       it "should execute the block passed in on each leads" do
-        l = MktoRest::Lead.new(@authenticated_client, { id: 1, email: 'joe@acme.com'})
+        l = MktoRest::Lead.new(@authenticated_client, { :id => 1, :email => 'joe@acme.com'})
         set_get_leads_stub_request('email', l.email, @hostname, @token)
         leads = @authenticated_client.get_leads :email, l.email do |lead|
           lead.email = "newemail@acme.com"

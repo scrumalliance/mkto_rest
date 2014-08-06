@@ -2,6 +2,7 @@ module MktoRest
   class Lead
 
     attr_reader :vars, :client
+    attr_reader :id, :email     # as used in #update
     def initialize(client, args)
       @vars = []
       @client = client

@@ -1,6 +1,6 @@
-require_relative "mkto_rest/version"
-require_relative "mkto_rest/http_utils"
-require_relative "mkto_rest/lead"
+require "mkto_rest/version"
+require "mkto_rest/http_utils"
+require "mkto_rest/lead"
 require "json"
 
 module MktoRest
@@ -11,7 +11,7 @@ module MktoRest
       @host = options[:host]
       @client_id = options[:client_id]
       @client_secret = options[:client_secret]
-      @options = options.select {|k,v| [:open_timeout,:read_timeout].include?(k) }
+      @options = Hash[options.select {|k,v| [:open_timeout,:read_timeout].include?(k) }]
       MktoRest::HttpUtils.debug = true if options[:debug]
     end
 
@@ -34,14 +34,14 @@ module MktoRest
     #    read_timeout - http read timeout
     def authenticate(options = {})
       args = {
-        grant_type: 'client_credentials',
-        client_id: @client_id,
-        client_secret: @client_secret
+        :grant_type => 'client_credentials',
+        :client_id => @client_id,
+        :client_secret => @client_secret
       }
       @options = options
       body = MktoRest::HttpUtils.get("https://#{@host}/identity/oauth/token", args, @options)
       raise RuntimeError.new("response empty.") if body.nil?
-      data = JSON.parse(body, { symbolize_names: true })
+      data = JSON.parse(body, { :symbolize_names => true })
       raise RuntimeError.new(data[:error_description]) if data[:error]
       @token = data[:access_token]
       @token_type = data[:token_type]
@@ -55,14 +55,14 @@ module MktoRest
       # values can be a string or an array
       values = values.split() unless values.is_a? Array
       args = {
-        access_token: @token,
-        filterType: filtr.to_s,
-        filterValues: values.join(','),
+        :access_token => @token,
+        :filterType => filtr.to_s,
+        :filterValues => values.join(','),
       }
       args[:fields] = fields.join(',') unless fields.empty?
       body = MktoRest::HttpUtils.get("https://#{@host}/rest/v1/leads.json", args, @options)
       raise RuntimeError.new("response empty.") if body.nil?
-      data = JSON.parse(body, { symbolize_names: true })
+      data = JSON.parse(body, { :symbolize_names => true })
       @last_request_id = data[:requestId]
       raise RuntimeError.new(data[:errors].to_s) if data[:success] == false
       leads = []
@@ -76,11 +76,11 @@ module MktoRest
 
     def update_lead_by_email(email, values)
       data = {
-        action: "updateOnly",
-        lookupField: 'email',
-        input: [
+        :action => "updateOnly",
+        :lookupField => 'email',
+        :input => [
                 {
-                  email: email,
+                  :email => email,
                 }.merge(values)
                ]
       }.to_json
@@ -90,11 +90,11 @@ module MktoRest
 
     def update_lead_by_id(id, values)
       data = {
-        action: "updateOnly",
-        lookupField: 'id',
-        input: [
+        :action => "updateOnly",
+        :lookupField => 'id',
+        :input => [
                 {
-                  id: id
+                  :id => id
                 }.merge(values)
                ]
       }.to_json
@@ -108,7 +108,7 @@ module MktoRest
       }
       raise RuntimeError.new("client not authenticated.") unless self.authenticated?
       body = MktoRest::HttpUtils.post("https://#{@host}/rest/v1/leads.json" + "?", headers, data, @options)
-      data = JSON.parse(body, { symbolize_names: true })
+      data = JSON.parse(body, { :symbolize_names => true })
       raise RuntimeError.new(data[:errors].to_s) if data[:success] == false
       data
     end
