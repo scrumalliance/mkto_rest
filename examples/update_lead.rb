@@ -5,9 +5,9 @@ require_relative '../lib/mkto_rest'
 require 'yaml'
 
 =begin
-This script looks for the hostname, client id and key in .mktorest. 
+This script looks for the hostname, client id and key in .mktorest.
 Create that file with the following (yaml) format:
-  
+
     ---
     :host: ''
     :client_id: ''
@@ -18,8 +18,8 @@ set your host name, client id and key to the right values.
 
 config_path = File.expand_path(File.join(File.dirname(__FILE__),'..', '.mktorest'))
 
-if File.exists? config_path 
-  config = YAML::load_file(config_path) 
+if File.exist? config_path
+  config = YAML::load_file(config_path)
 else
   print <<-EOF
 Set your host name, client id and key in #{config_path} in this format:
@@ -53,15 +53,12 @@ client.authenticate
 # find leads, updated fields.
 leads = client.get_leads :email, attr_v
 
-leads.each do |l|
-  p "found lead: #{l.to_s}"
-  p l.update values
+leads.each do |lead|
+  p "found lead: #{lead}"
+  p lead.update values
 end
 
 # using a block
 leads = client.get_leads :email, attr_v do |lead|
-  p "found lead #{lead.to_s}"
+  p "found lead #{lead}"
 end
-
-
-
