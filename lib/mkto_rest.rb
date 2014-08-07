@@ -1,6 +1,7 @@
 require "mkto_rest/version"
 require "mkto_rest/http_utils"
 require "mkto_rest/lead"
+require "mkto_rest/errors"
 require "json"
 
 module MktoRest
@@ -40,9 +41,9 @@ module MktoRest
       }
       @options = options
       body = MktoRest::HttpUtils.get("https://#{@host}/identity/oauth/token", args, @options)
-      raise RuntimeError.new("response empty.") if body.nil?
+      raise MktoRest::Error.new("response empty.") if body.nil?
       data = JSON.parse(body, { :symbolize_names => true })
-      raise RuntimeError.new(data[:error_description]) if data[:error]
+      raise MktoRest::Error.new(data[:error_description]) if data[:error]
       @token = data[:access_token]
       @token_type = data[:token_type]
       @expires_in = data[:expires_in]
@@ -51,7 +52,7 @@ module MktoRest
     end
 
     def get_leads(filtr, values = [], fields = [], &block)
-      raise RuntimeError.new("client not authenticated.") unless self.authenticated?
+      raise MktoRest::Error.new("client not authenticated.", MktoRest::EMPTY_TOKEN) unless self.authenticated?
       # values can be a string or an array
       values = values.split() unless values.is_a? Array
       args = {
@@ -61,10 +62,10 @@ module MktoRest
       }
       args[:fields] = fields.join(',') unless fields.empty?
       body = MktoRest::HttpUtils.get("https://#{@host}/rest/v1/leads.json", args, @options)
-      raise RuntimeError.new("response empty.") if body.nil?
+      raise MktoRest::Error.new("response empty.") if body.nil?
       data = JSON.parse(body, { :symbolize_names => true })
       @last_request_id = data[:requestId]
-      raise RuntimeError.new(data[:errors].to_s) if data[:success] == false
+      raise MktoRest::Error.new(data[:errors][:message], data[:errors][:code]) if data[:success] == false
       leads = []
       data[:result].each do |lead_attributes|
         l = Lead.new(self, lead_attributes)
@@ -106,10 +107,10 @@ module MktoRest
       headers = {
         "Authorization" => "Bearer #{@token}"
       }
-      raise RuntimeError.new("client not authenticated.") unless self.authenticated?
+      raise MktoRest::Error.new("client not authenticated.", MktoRest::EMPTY_TOKEN) unless self.authenticated?
       body = MktoRest::HttpUtils.post("https://#{@host}/rest/v1/leads.json" + "?", headers, data, @options)
       data = JSON.parse(body, { :symbolize_names => true })
-      raise RuntimeError.new(data[:errors].to_s) if data[:success] == false
+      raise MktoRest::Error.new(data[:errors][:message], data[:errors][:code]) if data[:success] == false
       data
     end
 
