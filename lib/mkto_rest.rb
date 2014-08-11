@@ -68,9 +68,9 @@ module MktoRest
       raise MktoRest::Error.new(data[:errors][0][:message], data[:errors][0][:code]) if data[:success] == false
       leads = []
       data[:result].each do |lead_attributes|
-        l = Lead.new(self, lead_attributes)
-        block.call l unless block.nil?
-        leads << l
+        lead = Lead.new(self, lead_attributes)
+        block.call lead unless block.nil?
+        leads << lead
       end unless data[:result].empty?
       leads
     end
