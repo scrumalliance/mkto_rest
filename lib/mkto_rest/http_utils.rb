@@ -13,12 +13,7 @@ module MktoRest
     def self.get(endpoint, args = {}, options = {})
       uri = URI.parse(endpoint + '?' + URI.encode_www_form(args))
       req = Net::HTTP::Get.new(uri.request_uri)
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.set_debug_output($stdout) if self.debug == true
-      http.use_ssl = (uri.scheme == "https")
-      http.open_timeout = options[:open_timeout] if options[:open_timeout]
-      http.read_timeout = options[:read_timeout] if options[:read_timeout]
-      resp = http.request(req)
+      resp = make_request(uri, req, options)
       resp.body
     end
 
@@ -30,13 +25,26 @@ module MktoRest
       req = Net::HTTP::Post.new(uri.request_uri, initheader = {'Content-Type' =>'application/json'})
       req.body = data
       headers.each { |k,v| req[k] = v }
+      resp = make_request(uri, req, options)
+      resp.body
+    end
+
+    private
+
+    RootCA = '/etc/ssl/certs'     # should be right for Unix-like servers
+    def self.make_request(uri, req, options)
       http = Net::HTTP.new(uri.host, uri.port)
-      http.set_debug_output($stdout) if self.debug == true
-      http.use_ssl = (uri.scheme == "https")
+      http.use_ssl = (uri.scheme == 'https')
+      if http.use_ssl? && File.directory?(RootCA)
+        http.ca_path = RootCA
+        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        http.verify_depth = 5
+      else
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      end
       http.open_timeout = options[:open_timeout] if options[:open_timeout]
       http.read_timeout = options[:read_timeout] if options[:read_timeout]
       resp = http.request(req)
-      resp.body
     end
   end
 end
