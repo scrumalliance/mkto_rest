@@ -35,12 +35,14 @@ module MktoRest
     def self.make_request(uri, req, options)
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = (uri.scheme == 'https')
-      if http.use_ssl? && File.directory?(RootCA)
-        http.ca_path = RootCA
-        http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-        http.verify_depth = 5
-      else
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      if http.use_ssl?
+        if File.directory?(RootCA)
+          http.ca_path = RootCA
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+          http.verify_depth = 5
+        else
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
       end
       http.open_timeout = options[:open_timeout] if options[:open_timeout]
       http.read_timeout = options[:read_timeout] if options[:read_timeout]
