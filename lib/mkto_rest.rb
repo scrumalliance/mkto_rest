@@ -65,7 +65,13 @@ module MktoRest
       raise MktoRest::Error.new("response empty.") if body.nil?
       data = JSON.parse(body, { :symbolize_names => true })
       @last_request_id = data[:requestId]
-      raise MktoRest::Error.new(data[:errors][0][:message], data[:errors][0][:code]) if data[:success] == false
+      if data[:success] == false
+        begin
+          raise MktoRest::Error.new(data[:errors][0][:message], data[:errors][0][:code])
+        rescue TypeError => e
+          fail "#{e.class.name}: #{e.message} in MktoRest::Error.new(data[:errors][0][:message], data[:errors][0][:code]) with data == #{data.inspect}"
+        end
+      end
       leads = []
       data[:result].each do |lead_attributes|
         lead = Lead.new(self, lead_attributes)
