@@ -6,6 +6,7 @@ module MktoRest
   EMPTY_TOKEN = 600          # so this can be internally raised when authentication hasn't been attempted
   # 601  | Access token invalid      | Unauthorized
   # 602  | Access token expired      | Unauthorized
+  ACCESS_TOKEN_EXPIRED = 602    # so a retry can be immediately attempted
   # 603  | Access denied | Authentication is successful but user doesn't have sufficient permission to call this API
   # 604  | Request timed out
   # 605  | HTTP Method not supported | GET is not supported for sync lead
