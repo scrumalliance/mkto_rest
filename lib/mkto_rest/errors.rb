@@ -9,6 +9,7 @@ module MktoRest
   ACCESS_TOKEN_EXPIRED = 602    # so a retry can be immediately attempted
   # 603  | Access denied | Authentication is successful but user doesn't have sufficient permission to call this API
   # 604  | Request timed out
+  REQUEST_TIMED_OUT = 604
   # 605  | HTTP Method not supported | GET is not supported for sync lead
   # 606  | Max rate limit '%s' exceeded with in '%s' secs
   # 607  | Daily quota reached
