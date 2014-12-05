@@ -12,7 +12,9 @@ module MktoRest
   REQUEST_TIMED_OUT = 604
   # 605  | HTTP Method not supported | GET is not supported for sync lead
   # 606  | Max rate limit '%s' exceeded with in '%s' secs
+  RATE_LIMIT_EXCEEDED = 606
   # 607  | Daily quota reached
+  DAILY_QUOTA_REACHED = 607
   # 608  | API Temporarily Unavailable
   # 609  | Invalid JSON
   # 610  | Requested resource not found
