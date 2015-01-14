@@ -13,8 +13,19 @@ module MktoRest
     def self.get(endpoint, args = {}, options = {})
       uri = URI.parse(endpoint + '?' + URI.encode_www_form(args))
       req = Net::HTTP::Get.new(uri.request_uri)
-      resp = make_request(uri, req, options)
-      resp.body
+
+      remaining_attempts = 2    # GET should be idempotent, we can retry
+      begin
+        resp = make_request(uri, req, options)
+        resp.body
+      rescue Errno::ECONNRESET
+        remaining_attempts -= 1
+        if remaining_attempts > 0
+          retry
+        else
+          raise
+        end
+      end
     end
 
     # \options:
