@@ -49,9 +49,7 @@ module MktoRest
     attr_reader :code
     def initialize(message=nil, code=nil)
       exc = super(message)
-      if code
-        @code = code
-      else
+      unless (@code = code.to_i.nonzero?)
         ERROR_MSGS.each do |a_code, a_message|
           if a_message === message
             @code = a_code
