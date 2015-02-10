@@ -20,7 +20,7 @@ and include it in your app/gem's Gemfile (this works locally only):
 ## Prerequisites
 
 Get the follwing values related to the **API User** from your Marketo admin:
-* hostname, i.e. \<munchkin_id\>.mktorest.com
+* host name, i.e. \<munchkin_id\>.mktorest.com
 * client id, e.g. '4567e1cdf-0fae-4685-a914-5be45043f2d8'
 * client secret, e.g. '7Gn0tuiHZiDHnzeu9P14uDQcSx9xIPPt'
 
@@ -44,10 +44,12 @@ If you need verbosity during troubleshooting, set the client to debug mode
 
     client.debug = true
 
+You can also add a `{debug: true}` to the options hash or the YAML configuration file.
+
 get leads matching an email, print their id and email:
 
     client.get_leads :email, 'sammy@acme.com' do |lead|
-      p "id: #{l.id}, email: #{l.email}"
+      p "id: #{lead.id}, email: #{lead.email}"
     end
 
 fetch a lead and update one of its value:
@@ -94,7 +96,7 @@ creating 2 new leads:
 
 ## Examples
 
-First create the configuration file .mktorest which should contain your client id and key, and hostname, e.g.:
+First create the configuration file .mktorest which should contain your host name, client id, and client secret, and, e.g.:
 
     ---
     :host: '215-CIJ-720.mktorest.com'
